@@ -17,7 +17,6 @@ class Program
             Stopwatch sw = new  Stopwatch();
             sw.Start();
             
-            Console.ReadKey();
             if (Console.ReadKey().Key == ConsoleKey.Escape)
             {
                 break;
@@ -45,7 +44,7 @@ class Program
             return cachedUsers;
         }
 
-        string json = await File.ReadAllTextAsync("data/data.json");
+        string json = await File.ReadAllTextAsync("../../../data/data.json");
         IEnumerable<User> users = JsonSerializer.Deserialize<IEnumerable<User>>(json)!;
         
         cache.Set(cacheKey, users);
