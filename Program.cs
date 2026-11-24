@@ -11,17 +11,19 @@ class Program
     {
         IMemoryCache cache = new MemoryCache(new MemoryCacheOptions());
         
+        Stopwatch sw = new  Stopwatch();
+        
         while (true)
         {
             Console.WriteLine("Press any button to get users frfr");
-            
-            Stopwatch sw = new  Stopwatch();
-            sw.Start();
             
             if (Console.ReadKey().Key == ConsoleKey.Escape)
             {
                 break;
             }
+            
+            sw.Reset();
+            sw.Start();
             
             IEnumerable<User> users = GetUsers(cache).Result;
 
@@ -32,7 +34,7 @@ class Program
             
             sw.Stop();
 
-            Console.WriteLine(sw.ElapsedMilliseconds);
+            Console.WriteLine($"\n{sw.ElapsedMilliseconds} ms");
         }
     }
     
