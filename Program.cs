@@ -7,6 +7,8 @@ namespace SimpleCacheTesting;
 
 class Program
 {
+    public static string message = "";
+    
     static void Main(string[] args)
     {
         IMemoryCache cache = new MemoryCache(new MemoryCacheOptions());
@@ -25,7 +27,7 @@ class Program
             sw.Reset();
             sw.Start();
             
-            IEnumerable<User> users = GetUsers(cache).Result;
+            IEnumerable<User> users = GetUsersMemoryCache(cache).Result;
 
             foreach (var user in users)
             {
@@ -34,26 +36,31 @@ class Program
             
             sw.Stop();
 
+            Console.WriteLine($"\n{message}");
             Console.WriteLine($"\n{sw.ElapsedMilliseconds} ms");
         }
     }
     
-    public static async Task<IEnumerable<User>> GetUsers(IMemoryCache cache)
+    public static async Task<IEnumerable<User>> GetUsersMemoryCache(IMemoryCache cache)
     {
         string cacheKey = "users";
+        bool isCacheMiss = false;
 
-        if (cache.TryGetValue(cacheKey, out IEnumerable<User>? cachedUsers) && cachedUsers is not null)
+        IEnumerable<User>? users = cache.GetOrCreate(cacheKey, entry =>
         {
-            Console.WriteLine("Returning cached users");
-            return cachedUsers;
-        }
+            isCacheMiss = true;
+            return GetData();
+        });
 
-        string json = await File.ReadAllTextAsync("../../../data/data.json");
+        message = isCacheMiss ? "Returned uncached users" : "Returned cached users";
+        return users!;
+    }
+
+    public static IEnumerable<User> GetData()
+    {
+        string json = File.ReadAllText("../../../data/data.json");
         IEnumerable<User> users = JsonSerializer.Deserialize<IEnumerable<User>>(json)!;
-        
-        cache.Set(cacheKey, users);
 
-        Console.WriteLine("Returning uncached users");
         return users;
     }
 
