@@ -42,6 +42,7 @@ class Program
 
         if (cache.TryGetValue(cacheKey, out IEnumerable<User>? cachedUsers) && cachedUsers is not null)
         {
+            Console.WriteLine("Returning cached users");
             return cachedUsers;
         }
 
@@ -50,6 +51,7 @@ class Program
         
         cache.Set(cacheKey, users);
 
+        Console.WriteLine("Returning uncached users");
         return users;
     }
 
