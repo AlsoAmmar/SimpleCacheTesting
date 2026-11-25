@@ -2,6 +2,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.Extensions.Caching.Memory;
+using SimpleCacheTesting.Model;
 
 namespace SimpleCacheTesting;
 
@@ -17,7 +18,7 @@ class Program
         
         while (true)
         {
-            Console.WriteLine("Press any button to get users frfr");
+            Console.WriteLine("Press any button to get users");
             
             if (Console.ReadKey().Key == ConsoleKey.Escape)
             {
@@ -62,17 +63,5 @@ class Program
         IEnumerable<User> users = JsonSerializer.Deserialize<IEnumerable<User>>(json)!;
 
         return users;
-    }
-
-    public class User
-    {
-        [JsonPropertyName("id")]
-        public int Id { get; set; }
-        
-        [JsonPropertyName("name")]
-        public string Name { get; set; }
-        
-        [JsonPropertyName("age")]
-        public int Age { get; set; }
     }
 }
